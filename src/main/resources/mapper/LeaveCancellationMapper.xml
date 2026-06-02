@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leave.mapper.LeaveCancellationMapper">
+
+    <resultMap id="cxlMap" type="com.leave.entity.LeaveCancellation">
+        <id property="id" column="id"/>
+        <result property="applicationId" column="application_id"/>
+        <result property="studentId" column="student_id"/>
+        <result property="returnTime" column="return_time"/>
+        <result property="approverId" column="approver_id"/>
+        <result property="approveTime" column="approve_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="studentName" column="student_name"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.leave.entity.LeaveCancellation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO leave_cancellation (application_id, student_id, return_time, status, comment)
+        VALUES (#{applicationId}, #{studentId}, #{returnTime}, #{status}, #{comment})
+    </insert>
+
+    <select id="findById" resultMap="cxlMap">
+        SELECT c.*, u.real_name AS student_name
+        FROM leave_cancellation c
+        JOIN `user` u ON c.student_id = u.id
+        WHERE c.id = #{id}
+    </select>
+
+    <select id="findByStatus" resultMap="cxlMap">
+        SELECT c.*, u.real_name AS student_name
+        FROM leave_cancellation c
+        JOIN `user` u ON c.student_id = u.id
+        WHERE c.status = #{status}
+        ORDER BY c.create_time DESC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE leave_cancellation
+        SET status = #{status}, approver_id = #{approverId}, approve_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>
