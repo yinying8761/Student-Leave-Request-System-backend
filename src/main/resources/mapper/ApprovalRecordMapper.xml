@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leave.mapper.ApprovalRecordMapper">
+
+    <resultMap id="recordMap" type="com.leave.entity.ApprovalRecord">
+        <id property="id" column="id"/>
+        <result property="applicationId" column="application_id"/>
+        <result property="approverId" column="approver_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="approverName" column="approver_name"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.leave.entity.ApprovalRecord">
+        INSERT INTO approval_record (application_id, approver_id, step, action, comment)
+        VALUES (#{applicationId}, #{approverId}, #{step}, #{action}, #{comment})
+    </insert>
+
+    <select id="findByApplicationId" resultMap="recordMap">
+        SELECT r.*, u.real_name AS approver_name
+        FROM approval_record r
+        JOIN `user` u ON r.approver_id = u.id
+        WHERE r.application_id = #{applicationId}
+        ORDER BY r.create_time ASC
+    </select>
+
+    <select id="findByApproverId" resultMap="recordMap">
+        SELECT r.*, u.real_name AS approver_name
+        FROM approval_record r
+        JOIN `user` u ON r.approver_id = u.id
+        WHERE r.approver_id = #{approverId}
+        ORDER BY r.create_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+</mapper>
