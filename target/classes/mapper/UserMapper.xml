@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.leave.mapper.UserMapper">
+
+    <resultMap id="userMap" type="com.leave.entity.User">
+        <id property="id" column="id"/>
+        <result property="realName" column="real_name"/>
+        <result property="className" column="class_name"/>
+        <result property="advisorId" column="advisor_id"/>
+        <result property="counselorId" column="counselor_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="baseColumns">
+        id, username, password, real_name, role, phone, email, department, class_name,
+        advisor_id, counselor_id, enabled, create_time, update_time
+    </sql>
+
+    <select id="findById" resultMap="userMap">
+        SELECT <include refid="baseColumns"/> FROM `user` WHERE id = #{id}
+    </select>
+
+    <select id="findByUsername" resultMap="userMap">
+        SELECT <include refid="baseColumns"/> FROM `user` WHERE username = #{username}
+    </select>
+
+    <select id="findAll" resultMap="userMap">
+        SELECT <include refid="baseColumns"/> FROM `user` WHERE enabled = 1 ORDER BY create_time DESC
+    </select>
+
+    <select id="findByRole" resultMap="userMap">
+        SELECT <include refid="baseColumns"/> FROM `user` WHERE role = #{role} AND enabled = 1
+    </select>
+
+    <insert id="insert" parameterType="com.leave.entity.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `user` (username, password, real_name, role, phone, email, department, class_name, advisor_id, counselor_id)
+        VALUES (#{username}, #{password}, #{realName}, #{role}, #{phone}, #{email}, #{department}, #{className}, #{advisorId}, #{counselorId})
+    </insert>
+
+    <update id="update" parameterType="com.leave.entity.User">
+        UPDATE `user`
+        <set>
+            <if test="realName != null">real_name = #{realName},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="className != null">class_name = #{className},</if>
+            <if test="advisorId != null">advisor_id = #{advisorId},</if>
+            <if test="counselorId != null">counselor_id = #{counselorId},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteById">
+        UPDATE `user` SET enabled = 0 WHERE id = #{id}
+    </update>
+
+</mapper>
