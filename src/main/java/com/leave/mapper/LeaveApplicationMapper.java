@@ -23,9 +23,8 @@ public interface LeaveApplicationMapper {
     int updateStatus(@Param("id") Long id, @Param("status") String status);
     int cancel(@Param("id") Long id, @Param("studentId") Long studentId);
     long countByStatus(@Param("status") String status);
-    long countByApproverIdAndStep(@Param("approverId") Long approverId,
-                                   @Param("status") String status,
-                                   @Param("step") Integer step);
+    long countPendingByCounselorId(@Param("approverId") Long approverId,
+                                   @Param("status") String status);
     List<LeaveApplication> findByClassAndDepartment(@Param("department") String department,
                                                      @Param("className") String className);
 }

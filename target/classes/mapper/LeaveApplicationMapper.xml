@@ -45,12 +45,7 @@
         FROM leave_application a
         JOIN `user` u ON a.student_id = u.id
         WHERE a.status = #{status}
-        <if test="role == 'ADVISOR'">
-            AND u.advisor_id = #{approverId}
-        </if>
-        <if test="role == 'COUNSELOR'">
-            AND u.counselor_id = #{approverId}
-        </if>
+        AND u.counselor_id = #{approverId}
         ORDER BY a.create_time DESC
         LIMIT #{offset}, #{limit}
     </select>
@@ -60,12 +55,7 @@
         FROM leave_application a
         JOIN `user` u ON a.student_id = u.id
         WHERE a.status = #{status}
-        <if test="role == 'ADVISOR'">
-            AND u.advisor_id = #{approverId}
-        </if>
-        <if test="role == 'COUNSELOR'">
-            AND u.counselor_id = #{approverId}
-        </if>
+        AND u.counselor_id = #{approverId}
     </select>
 
     <update id="updateStatus">
@@ -73,24 +63,19 @@
     </update>
 
     <update id="cancel">
-        UPDATE leave_application SET status = 'CANCELLED' WHERE id = #{id} AND student_id = #{studentId} AND status IN ('PENDING_ADVISOR', 'PENDING_COUNSELOR')
+        UPDATE leave_application SET status = 'REJECTED' WHERE id = #{id} AND student_id = #{studentId} AND status = 'PENDING'
     </update>
 
     <select id="countByStatus" resultType="long">
         SELECT COUNT(*) FROM leave_application WHERE status = #{status}
     </select>
 
-    <select id="countByApproverIdAndStep" resultType="long">
+    <select id="countPendingByCounselorId" resultType="long">
         SELECT COUNT(DISTINCT a.id)
         FROM leave_application a
         JOIN `user` u ON a.student_id = u.id
         WHERE a.status = #{status}
-        <if test="step == 1">
-            AND u.advisor_id = #{approverId}
-        </if>
-        <if test="step == 2">
-            AND u.counselor_id = #{approverId}
-        </if>
+        AND u.counselor_id = #{approverId}
     </select>
 
     <select id="findByClassAndDepartment" resultMap="appMap">

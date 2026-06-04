@@ -8,7 +8,6 @@ import com.leave.entity.User;
 import com.leave.mapper.ApprovalRecordMapper;
 import com.leave.mapper.LeaveApplicationMapper;
 import com.leave.service.ApprovalService;
-import com.leave.service.LeaveApplicationService;
 import com.leave.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,51 +36,32 @@ public class ApprovalServiceImpl implements ApprovalService {
         if (app == null) throw new BusinessException("请假申请不存在");
 
         User approver = userService.findById(approverId);
-        String role = approver.getRole();
-        int step;
-        String nextStatus;
-
-        if ("ADVISOR".equals(role)) {
-            if (!"PENDING_ADVISOR".equals(app.getStatus())) {
-                throw new BusinessException("当前状态不允许导师审批");
-            }
-            step = 1;
-            nextStatus = "APPROVE".equals(request.getAction()) ? "PENDING_COUNSELOR" : "REJECTED";
-        } else if ("COUNSELOR".equals(role)) {
-            if (!"PENDING_COUNSELOR".equals(app.getStatus())) {
-                throw new BusinessException("当前状态不允许辅导员审批");
-            }
-            step = 2;
-            nextStatus = "APPROVE".equals(request.getAction()) ? "APPROVED" : "REJECTED";
-        } else {
-            throw new BusinessException("无审批权限");
+        if (!"COUNSELOR".equals(approver.getRole())) {
+            throw new BusinessException("无审批权限，仅辅导员可审批");
+        }
+        if (!"PENDING".equals(app.getStatus())) {
+            throw new BusinessException("当前状态不允许审批");
         }
 
-        // 记录审批
+        String nextStatus = "APPROVE".equals(request.getAction()) ? "APPROVED" : "REJECTED";
+
         ApprovalRecord record = new ApprovalRecord();
         record.setApplicationId(app.getId());
         record.setApproverId(approverId);
-        record.setStep(step);
+        record.setStep(1);
         record.setAction(request.getAction());
         record.setComment(request.getComment());
         recordMapper.insert(record);
 
-        // 更新状态
         appMapper.updateStatus(app.getId(), nextStatus);
     }
 
     @Override
     public List<LeaveApplication> listPending(Long approverId) {
         User approver = userService.findById(approverId);
-        String role = approver.getRole();
-        String status;
-        if ("ADVISOR".equals(role)) {
-            status = "PENDING_ADVISOR";
-        } else if ("COUNSELOR".equals(role)) {
-            status = "PENDING_COUNSELOR";
-        } else {
+        if (!"COUNSELOR".equals(approver.getRole())) {
             throw new BusinessException("无审批权限");
         }
-        return appMapper.findByApproverRole(role, approverId, status, 0, 100);
+        return appMapper.findByApproverRole("COUNSELOR", approverId, "PENDING", 0, 100);
     }
 }
