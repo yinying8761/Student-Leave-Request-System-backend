@@ -44,7 +44,7 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
         long diff = app.getEndTime().getTime() - app.getStartTime().getTime();
         app.setDurationDays(Math.ceil(diff / (1000.0 * 3600 * 24) * 10) / 10);
         app.setReason(request.getReason());
-        app.setStatus("PENDING_ADVISOR");
+        app.setStatus("PENDING");
         appMapper.insert(app);
         return app;
     }

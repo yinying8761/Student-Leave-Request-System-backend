@@ -2,7 +2,6 @@ package com.leave.service.impl;
 
 import com.leave.entity.User;
 import com.leave.mapper.LeaveApplicationMapper;
-import com.leave.mapper.NotificationMapper;
 import com.leave.service.StatisticsService;
 import com.leave.service.UserService;
 import org.springframework.stereotype.Service;
@@ -26,19 +25,21 @@ public class StatisticsServiceImpl implements StatisticsService {
         User user = userService.findById(userId);
         Map<String, Object> result = new HashMap<>();
         long pendingCount = 0;
-        if ("ADVISOR".equals(user.getRole())) {
-            pendingCount = appMapper.countByApproverIdAndStep(userId, "PENDING_ADVISOR", 1);
-        } else if ("COUNSELOR".equals(user.getRole())) {
-            pendingCount = appMapper.countByApproverIdAndStep(userId, "PENDING_COUNSELOR", 2);
+        long totalCount = 0;
+        if ("COUNSELOR".equals(user.getRole())) {
+            pendingCount = appMapper.countPendingByCounselorId(userId, "PENDING");
+        }
+        if ("STUDENT".equals(user.getRole())) {
+            totalCount = appMapper.countByStudentId(userId);
         }
         result.put("pendingCount", (int) pendingCount);
-        result.put("totalCount", 0); // simplified
+        result.put("totalCount", (int) totalCount);
         return result;
     }
 
     @Override
     public List<Map<String, Object>> studentStats(Long studentId) {
-        return Collections.emptyList(); // simplified
+        return Collections.emptyList();
     }
 
     @Override
