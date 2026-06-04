@@ -15,7 +15,7 @@ public class StatisticsServiceImpl implements StatisticsService {
     private final UserService userService;
 
     public StatisticsServiceImpl(LeaveApplicationMapper appMapper,
-                                  UserService userService) {
+                                 UserService userService) {
         this.appMapper = appMapper;
         this.userService = userService;
     }
