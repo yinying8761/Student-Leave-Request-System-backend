@@ -9,6 +9,14 @@
         <result property="startTime" column="start_time"/>
         <result property="endTime" column="end_time"/>
         <result property="durationDays" column="duration_days"/>
+        <result property="isLeaveCampus" column="is_leave_campus"/>
+        <result property="destinationProvince" column="destination_province"/>
+        <result property="destinationCity" column="destination_city"/>
+        <result property="destinationDistrict" column="destination_district"/>
+        <result property="destinationDetail" column="destination_detail"/>
+        <result property="contactPhone" column="contact_phone"/>
+        <result property="emergencyContactName" column="emergency_contact_name"/>
+        <result property="emergencyContactPhone" column="emergency_contact_phone"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
         <result property="studentName" column="student_name"/>
@@ -16,8 +24,8 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.leave.entity.LeaveApplication" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO leave_application (student_id, leave_type, start_time, end_time, duration_days, reason, status)
-        VALUES (#{studentId}, #{leaveType}, #{startTime}, #{endTime}, #{durationDays}, #{reason}, #{status})
+        INSERT INTO leave_application (student_id, leave_type, start_time, end_time, duration_days, reason, is_leave_campus, destination_province, destination_city, destination_district, destination_detail, contact_phone, emergency_contact_name, emergency_contact_phone, status)
+        VALUES (#{studentId}, #{leaveType}, #{startTime}, #{endTime}, #{durationDays}, #{reason}, #{isLeaveCampus}, #{destinationProvince}, #{destinationCity}, #{destinationDistrict}, #{destinationDetail}, #{contactPhone}, #{emergencyContactName}, #{emergencyContactPhone}, #{status})
     </insert>
 
     <select id="findById" resultMap="appMap">

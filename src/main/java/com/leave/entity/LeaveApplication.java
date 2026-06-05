@@ -8,6 +8,14 @@ public class LeaveApplication {
     private java.sql.Timestamp endTime;
     private Double durationDays;
     private String reason;
+    private Boolean isLeaveCampus;
+    private String destinationProvince;
+    private String destinationCity;
+    private String destinationDistrict;
+    private String destinationDetail;
+    private String contactPhone;
+    private String emergencyContactName;
+    private String emergencyContactPhone;
     private String status;
     private java.sql.Timestamp createTime;
     private java.sql.Timestamp updateTime;
@@ -30,6 +38,22 @@ public class LeaveApplication {
     public void setDurationDays(Double durationDays) { this.durationDays = durationDays; }
     public String getReason() { return reason; }
     public void setReason(String reason) { this.reason = reason; }
+    public Boolean getIsLeaveCampus() { return isLeaveCampus; }
+    public void setIsLeaveCampus(Boolean isLeaveCampus) { this.isLeaveCampus = isLeaveCampus; }
+    public String getDestinationProvince() { return destinationProvince; }
+    public void setDestinationProvince(String destinationProvince) { this.destinationProvince = destinationProvince; }
+    public String getDestinationCity() { return destinationCity; }
+    public void setDestinationCity(String destinationCity) { this.destinationCity = destinationCity; }
+    public String getDestinationDistrict() { return destinationDistrict; }
+    public void setDestinationDistrict(String destinationDistrict) { this.destinationDistrict = destinationDistrict; }
+    public String getDestinationDetail() { return destinationDetail; }
+    public void setDestinationDetail(String destinationDetail) { this.destinationDetail = destinationDetail; }
+    public String getContactPhone() { return contactPhone; }
+    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
+    public String getEmergencyContactName() { return emergencyContactName; }
+    public void setEmergencyContactName(String emergencyContactName) { this.emergencyContactName = emergencyContactName; }
+    public String getEmergencyContactPhone() { return emergencyContactPhone; }
+    public void setEmergencyContactPhone(String emergencyContactPhone) { this.emergencyContactPhone = emergencyContactPhone; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
     public java.sql.Timestamp getCreateTime() { return createTime; }

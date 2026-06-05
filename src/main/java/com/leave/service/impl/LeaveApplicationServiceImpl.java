@@ -44,6 +44,14 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
         long diff = app.getEndTime().getTime() - app.getStartTime().getTime();
         app.setDurationDays(Math.ceil(diff / (1000.0 * 3600 * 24) * 10) / 10);
         app.setReason(request.getReason());
+        app.setIsLeaveCampus(request.getIsLeaveCampus());
+        app.setDestinationProvince(request.getDestinationProvince());
+        app.setDestinationCity(request.getDestinationCity());
+        app.setDestinationDistrict(request.getDestinationDistrict());
+        app.setDestinationDetail(request.getDestinationDetail());
+        app.setContactPhone(request.getContactPhone());
+        app.setEmergencyContactName(request.getEmergencyContactName());
+        app.setEmergencyContactPhone(request.getEmergencyContactPhone());
         app.setStatus("PENDING");
         appMapper.insert(app);
         return app;
