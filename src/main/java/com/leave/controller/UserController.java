@@ -1,8 +1,12 @@
 package com.leave.controller;
 
 import com.leave.common.Result;
+import com.leave.dto.PasswordChangeRequest;
+import com.leave.dto.ProfileUpdateRequest;
 import com.leave.dto.UserCreateRequest;
+import com.leave.entity.User;
 import com.leave.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,5 +45,23 @@ public class UserController {
     public Result<?> delete(@PathVariable Long id) {
         userService.deleteUser(id);
         return Result.ok();
+    }
+
+    @PutMapping("/profile")
+    public Result<?> updateProfile(@Valid @RequestBody ProfileUpdateRequest request) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return Result.ok(userService.updateProfile(user.getId(), request));
+    }
+
+    @PutMapping("/password")
+    public Result<?> changePassword(@Valid @RequestBody PasswordChangeRequest request) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        userService.changePassword(user.getId(), request);
+        return Result.ok();
+    }
+
+    @GetMapping("/counselors")
+    public Result<?> listCounselors() {
+        return Result.ok(userService.listCounselors());
     }
 }

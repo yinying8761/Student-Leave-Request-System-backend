@@ -3,6 +3,8 @@ package com.leave.service.impl;
 import com.leave.common.BusinessException;
 import com.leave.common.JwtUtils;
 import com.leave.dto.LoginRequest;
+import com.leave.dto.PasswordChangeRequest;
+import com.leave.dto.ProfileUpdateRequest;
 import com.leave.dto.UserCreateRequest;
 import com.leave.dto.UserVO;
 import com.leave.entity.User;
@@ -41,7 +43,9 @@ public class UserServiceImpl implements UserService {
         String token = jwtUtils.generateToken(user.getId(), user.getUsername(), user.getRole());
         Map<String, Object> result = new HashMap<>();
         result.put("token", token);
-        result.put("user", UserVO.fromUser(user));
+        UserVO userVO = UserVO.fromUser(user);
+        fillCounselorName(userVO);
+        result.put("user", userVO);
         return result;
     }
 
@@ -49,7 +53,16 @@ public class UserServiceImpl implements UserService {
     public UserVO getCurrentUser(Long userId) {
         User user = userMapper.findById(userId);
         if (user == null) throw new BusinessException("用户不存在");
-        return UserVO.fromUser(user);
+        UserVO vo = UserVO.fromUser(user);
+        fillCounselorName(vo);
+        return vo;
+    }
+
+    private void fillCounselorName(UserVO vo) {
+        if (vo.getCounselorId() != null) {
+            User counselor = userMapper.findById(vo.getCounselorId());
+            if (counselor != null) vo.setCounselorName(counselor.getRealName());
+        }
     }
 
     @Override
@@ -103,12 +116,50 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserVO> listUsers() {
         return userMapper.findAll().stream()
-                .map(UserVO::fromUser)
+                .map(u -> {
+                    UserVO vo = UserVO.fromUser(u);
+                    fillCounselorName(vo);
+                    return vo;
+                })
                 .collect(Collectors.toList());
     }
 
     @Override
     public User findById(Long id) {
         return userMapper.findById(id);
+    }
+
+    @Override
+    public UserVO updateProfile(Long userId, ProfileUpdateRequest request) {
+        User user = userMapper.findById(userId);
+        if (user == null) throw new BusinessException("用户不存在");
+        user.setRealName(request.getRealName());
+        user.setPhone(request.getPhone());
+        user.setEmail(request.getEmail());
+        user.setDepartment(request.getDepartment());
+        user.setClassName(request.getClassName());
+        user.setCounselorId(request.getCounselorId());
+        userMapper.update(user);
+        UserVO vo = UserVO.fromUser(userMapper.findById(userId));
+        fillCounselorName(vo);
+        return vo;
+    }
+
+    @Override
+    public void changePassword(Long userId, PasswordChangeRequest request) {
+        User user = userMapper.findById(userId);
+        if (user == null) throw new BusinessException("用户不存在");
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new BusinessException("原密码错误");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userMapper.update(user);
+    }
+
+    @Override
+    public List<UserVO> listCounselors() {
+        return userMapper.findByRole("COUNSELOR").stream()
+                .map(UserVO::fromUser)
+                .collect(Collectors.toList());
     }
 }

@@ -11,6 +11,7 @@ public class UserVO {
     private String className;
     private Long advisorId;
     private Long counselorId;
+    private String counselorName;
 
     // Static factory for security - avoids exposing password
     public static UserVO fromUser(com.leave.entity.User u) {
@@ -48,4 +49,6 @@ public class UserVO {
     public void setAdvisorId(Long advisorId) { this.advisorId = advisorId; }
     public Long getCounselorId() { return counselorId; }
     public void setCounselorId(Long counselorId) { this.counselorId = counselorId; }
+    public String getCounselorName() { return counselorName; }
+    public void setCounselorName(String counselorName) { this.counselorName = counselorName; }
 }
