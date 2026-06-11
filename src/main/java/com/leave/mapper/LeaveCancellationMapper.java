@@ -9,6 +9,7 @@ public interface LeaveCancellationMapper {
     int insert(LeaveCancellation cancellation);
     LeaveCancellation findById(@Param("id") Long id);
     List<LeaveCancellation> findByStatus(@Param("status") String status);
+    List<LeaveCancellation> findByApplicationId(@Param("applicationId") Long applicationId);
     int updateStatus(@Param("id") Long id, @Param("status") String status,
                      @Param("approverId") Long approverId);
 }

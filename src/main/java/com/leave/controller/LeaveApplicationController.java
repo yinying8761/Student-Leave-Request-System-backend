@@ -39,8 +39,10 @@ public class LeaveApplicationController {
         PageResult<LeaveApplication> page;
         if ("STUDENT".equals(user.getRole())) {
             page = appService.listByStudent(user.getId(), current, size);
+        } else if ("COUNSELOR".equals(user.getRole())) {
+            page = appService.listByCounselorId(user.getId(), current, size);
         } else {
-            page = appService.listByStudent(null, current, size); // will be empty for non-students
+            page = appService.listAll(current, size);
         }
         return Result.ok(page);
     }

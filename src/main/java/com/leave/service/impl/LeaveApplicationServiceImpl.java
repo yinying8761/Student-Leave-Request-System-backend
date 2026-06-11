@@ -57,11 +57,34 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
         return app;
     }
 
+    private void transitionExpired() {
+        appMapper.updateExpiredToCancelling();
+    }
+
     @Override
     public PageResult<LeaveApplication> listByStudent(Long studentId, int current, int size) {
+        transitionExpired();
         int offset = (current - 1) * size;
         List<LeaveApplication> list = appMapper.findByStudentId(studentId, offset, size);
         long total = appMapper.countByStudentId(studentId);
+        return PageResult.of(list, total, current, size);
+    }
+
+    @Override
+    public PageResult<LeaveApplication> listAll(int current, int size) {
+        transitionExpired();
+        int offset = (current - 1) * size;
+        List<LeaveApplication> list = appMapper.findAll(offset, size);
+        long total = appMapper.countAll();
+        return PageResult.of(list, total, current, size);
+    }
+
+    @Override
+    public PageResult<LeaveApplication> listByCounselorId(Long counselorId, int current, int size) {
+        transitionExpired();
+        int offset = (current - 1) * size;
+        List<LeaveApplication> list = appMapper.findByCounselorId(counselorId, offset, size);
+        long total = appMapper.countByCounselorId(counselorId);
         return PageResult.of(list, total, current, size);
     }
 

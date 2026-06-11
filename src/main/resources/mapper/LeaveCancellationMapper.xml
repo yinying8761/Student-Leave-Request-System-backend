@@ -25,6 +25,14 @@
         WHERE c.id = #{id}
     </select>
 
+    <select id="findByApplicationId" resultMap="cxlMap">
+        SELECT c.*, u.real_name AS student_name
+        FROM leave_cancellation c
+        JOIN `user` u ON c.student_id = u.id
+        WHERE c.application_id = #{applicationId}
+        ORDER BY c.create_time DESC
+    </select>
+
     <select id="findByStatus" resultMap="cxlMap">
         SELECT c.*, u.real_name AS student_name
         FROM leave_cancellation c

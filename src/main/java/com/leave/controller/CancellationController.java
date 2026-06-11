@@ -41,6 +41,16 @@ public class CancellationController {
         return Result.ok();
     }
 
+    @PostMapping("/counselor")
+    public Result<?> counselorCancel(@Valid @RequestBody CancellationRequest request) {
+        User user = getCurrentUser();
+        if (!"COUNSELOR".equals(user.getRole())) {
+            return Result.fail(403, "仅辅导员可代替销假");
+        }
+        cxlService.counselorCancel(request, user.getId());
+        return Result.ok();
+    }
+
     private User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return (User) auth.getPrincipal();

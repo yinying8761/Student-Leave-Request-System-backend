@@ -12,4 +12,6 @@ public interface LeaveApplicationService {
     Map<String, Object> getDetail(Long id);
     void cancel(Long id, Long studentId);
     PageResult<LeaveApplication> listPending(int current, int size);
+    PageResult<LeaveApplication> listAll(int current, int size);
+    PageResult<LeaveApplication> listByCounselorId(Long counselorId, int current, int size);
 }

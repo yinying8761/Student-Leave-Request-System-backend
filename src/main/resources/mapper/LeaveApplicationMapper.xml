@@ -86,6 +86,39 @@
         AND u.counselor_id = #{approverId}
     </select>
 
+    <select id="findAll" resultMap="appMap">
+        SELECT a.*, u.real_name AS student_name, u.class_name
+        FROM leave_application a
+        JOIN `user` u ON a.student_id = u.id
+        ORDER BY a.create_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*) FROM leave_application
+    </select>
+
+    <select id="findByCounselorId" resultMap="appMap">
+        SELECT a.*, u.real_name AS student_name, u.class_name
+        FROM leave_application a
+        JOIN `user` u ON a.student_id = u.id
+        WHERE u.counselor_id = #{counselorId}
+        ORDER BY a.create_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <select id="countByCounselorId" resultType="long">
+        SELECT COUNT(*)
+        FROM leave_application a
+        JOIN `user` u ON a.student_id = u.id
+        WHERE u.counselor_id = #{counselorId}
+    </select>
+
+    <update id="updateExpiredToCancelling">
+        UPDATE leave_application SET status = 'CANCELLING'
+        WHERE status = 'APPROVED' AND end_time &lt; NOW()
+    </update>
+
     <select id="findByClassAndDepartment" resultMap="appMap">
         SELECT a.*, u.real_name AS student_name, u.class_name
         FROM leave_application a
