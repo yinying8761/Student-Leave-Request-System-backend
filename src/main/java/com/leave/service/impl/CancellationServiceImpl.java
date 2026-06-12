@@ -21,7 +21,7 @@ public class CancellationServiceImpl implements CancellationService {
 
     private final LeaveCancellationMapper cxlMapper;
     private final LeaveApplicationMapper appMapper;
-    private final UserService userService;
+    private final  UserService userService;
 
     public CancellationServiceImpl(LeaveCancellationMapper cxlMapper,
                                     LeaveApplicationMapper appMapper,
@@ -42,7 +42,7 @@ public class CancellationServiceImpl implements CancellationService {
         // Check for existing pending cancellation
         List<LeaveCancellation> existing = cxlMapper.findByApplicationId(request.getApplicationId());
         if (existing.stream().anyMatch(c -> "PENDING".equals(c.getStatus()))) {
-            throw new BusinessException("已有待处理的销假申请，请等待审批");
+             throw new BusinessException("已有待处理的销假申请，请等待审批");
         }
         if (!app.getStudentId().equals(studentId)) {
             throw new BusinessException("只能对自己的请假发起销假");
