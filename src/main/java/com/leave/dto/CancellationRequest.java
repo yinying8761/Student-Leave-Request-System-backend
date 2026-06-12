@@ -9,7 +9,7 @@ public class CancellationRequest {
     private Long applicationId;
 
     @NotBlank(message = "返校时间不能为空")
-    private String returnTime;
+    private  String  returnTime;
 
     private String comment;
 
