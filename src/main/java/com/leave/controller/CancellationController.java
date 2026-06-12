@@ -42,7 +42,7 @@ public class CancellationController {
     }
 
     @PostMapping("/counselor")
-    public Result<?> counselorCancel(@Valid @RequestBody CancellationRequest request) {
+    public Result<?>  counselorCancel(@Valid @RequestBody CancellationRequest request) {
         User user = getCurrentUser();
         if (!"COUNSELOR".equals(user.getRole())) {
             return Result.fail(403, "仅辅导员可代替销假");
